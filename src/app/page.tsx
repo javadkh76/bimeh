@@ -1,10 +1,5 @@
-import Box from '@mui/material/Box';
-import Header from '@/components/header/Header';
+import Home from '@/containers/home/Home';
 
 export default function HomePage() {
-  return (
-    <Box>
-      <Header text={'مشخصات بیمه نامه'} />
-    </Box>
-  );
+  return <Home />;
 }

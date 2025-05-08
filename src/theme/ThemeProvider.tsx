@@ -17,6 +17,57 @@ const theme = createTheme(
     typography: {
       fontFamily: 'inherit',
     },
+    palette: {
+      primary: {
+        light: '#000',
+        main: '#000',
+        dark: '#000',
+      },
+      secondary: {
+        light: '#ACACAC',
+        main: '#ACACAC',
+        dark: '#ACACAC',
+      },
+    },
+    components: {
+      MuiFormHelperText: {
+        styleOverrides: {
+          root: {
+            marginLeft: 0,
+            fontSize: 14,
+            '&.Mui-error': {
+              color: '#E61F10',
+            },
+          },
+        },
+      },
+      MuiInputBase: {
+        styleOverrides: {
+          root: {
+            color: '#757575',
+            borderRadius: '0 !important',
+            '& > .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#B4B4B4 !important',
+            },
+            '&.Mui-error > .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#E61F10 !important',
+            },
+          },
+          input: {
+            padding: '13px 10px !important',
+          },
+        },
+      },
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 0,
+            padding: '11px 26px',
+            boxShadow: 'none',
+          },
+        },
+      },
+    },
   },
   faIR
 );
