@@ -2,89 +2,123 @@
 import Header from '@/components/header/Header';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Button, TextField } from '@mui/material';
-import Modal from '@/components/modal/Modal';
+import TextField from '@mui/material/TextField';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { useState } from 'react';
-import AddressItem from '@/containers/home/car-owner-info/AddressItem';
 import { Address } from '@/types/address';
 import LoadingButton from '@/components/loading-button/LoadingButton';
+import { useSubmitOrder } from '@/query/api/modules/order';
+import { useRouter } from 'next/navigation';
+import { useFormStore } from '@/store/useFormStore';
+import AddressSection from '@/containers/home/car-owner-info/address-section/AddressSection';
 
+export type RequestFormSchema = {
+  nationalId: string;
+  phoneNumber: string;
+  addressId: string;
+};
 const CarOwnerInfo = () => {
-  const [open, setOpen] = useState(false);
-  const [checkedAddress, setCheckedAddress] = useState<Address | null>(null);
+  const router = useRouter();
+  const { setFormData, formData } = useFormStore();
+  const [checkedAddress, setCheckedAddress] = useState<Address | null>(formData.address);
 
-  const addresses = [
-    {
-      id: '1',
-      name: 'آدرس شماره ۱',
-      details: 'فارس، شیراز، خیابان جمهوری، بالاتراز فلان، پلاک 6، واحد 234',
+  const methods = useForm<RequestFormSchema>({ mode: 'onSubmit', defaultValues: formData });
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    trigger,
+    formState: { isValid, errors },
+  } = methods;
+
+  const { mutate, isPending: submitIsPending } = useSubmitOrder({
+    mutation: {
+      onSuccess(data) {
+        if (data) {
+          setFormData({ ...getValues(), address: checkedAddress });
+          router.replace('/receipt');
+        }
+      },
+      onError: async data => {
+        if ('errors' in data) {
+          alert(data.errors);
+          if (typeof data.errors === 'object' && data.errors && 'price' in data.errors) {
+          }
+        }
+      },
     },
-    {
-      id: '2',
-      name: 'آدرس شماره ۲',
-      details: 'فارس، شیراز، خیابان جمهوری، بالاتراز فلان، پلاک 6، واحد 234',
-    },
-  ];
+  });
+
+  const onSubmit: SubmitHandler<RequestFormSchema> = data =>
+    !isValid
+      ? trigger().then(value => {
+          if (value) {
+            mutate({ data: getValues() });
+          }
+        })
+      : mutate({
+          data,
+        });
+
   return (
-    <Stack gap={3} alignItems="center">
+    <Stack gap={3} sx={{ alignItems: 'center', mb: 3.5 }}>
       <Header text="مشخصات مالک خودرو" />
-      <Stack alignItems="flex-start" sx={{ width: 1, px: 2.5 }}>
+      <Stack
+        alignItems="flex-start"
+        sx={{ width: 1, px: 2.5 }}
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <Typography sx={{ fontSize: 16, fontWeight: 500, mb: 0.75 }}>
           لطفا اطلاعات شخصی مالک خودرو را وارد کنید:
         </Typography>
         <TextField
           placeholder="کد ملی"
           fullWidth
-          sx={{ mb: 0.25 }}
-          helperText="کد ملی وارد شده معتبر نیست."
-          error={true}
+          sx={{ mb: !!errors['nationalId'] ? 0.25 : 3.5 }}
+          slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 10 } }}
+          {...register('nationalId', {
+            required: true,
+            pattern: /^[0-9]{10}$/i,
+          })}
+          error={!!errors['nationalId']}
+          helperText={errors['nationalId'] ? 'کد ملی وارد شده معتبر نیست.' : ''}
         />
-        <TextField placeholder="شماره تلفن همراه" fullWidth sx={{ mb: 3.5 }} />
-        <Stack gap={1} sx={{ width: 1, mb: 3 }}>
-          <Typography sx={{ fontSize: 16, fontWeight: 500 }}>آدرس جهت درج روی بیمه نامه</Typography>
-          <Typography sx={{ fontSize: 14 }}>
-            لطفا آدرسی را که می خواهید روی بیمه نامه درج شود، وارد کنید.
-          </Typography>
-          <Button
-            fullWidth
-            size="large"
-            sx={{ backgroundColor: '#FFC453', color: 'black' }}
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            انتخاب از آدرس های من
-          </Button>
-          <Modal
-            open={open}
-            onClose={() => {
-              setOpen(false);
-            }}
-            title="انتخاب آدرس"
-            actionBox={
-              <Button variant="contained" fullWidth size="large" sx={{ py: 1.5 }}>
-                انتخاب
-              </Button>
-            }
-          >
-            <Stack gap={2}>
-              {addresses.map(address => (
-                <AddressItem
-                  key={address.id}
-                  {...address}
-                  checked={checkedAddress?.id === address.id}
-                  onClick={value => setCheckedAddress(value)}
-                />
-              ))}
-            </Stack>
-          </Modal>
-        </Stack>
+        <TextField
+          placeholder="شماره تلفن همراه"
+          fullWidth
+          sx={{ mb: !!errors['phoneNumber'] ? 0.25 : 3.5 }}
+          slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 11 } }}
+          {...register('phoneNumber', {
+            required: true,
+            pattern: /^09\d{9}$/i,
+          })}
+          error={!!errors['phoneNumber']}
+          helperText={errors['phoneNumber'] ? 'شماره تلفن همراه معتبر نیست.' : ''}
+        />
+        <input
+          type="hidden"
+          {...register('addressId', {
+            required: true,
+          })}
+        />
+
+        <AddressSection
+          onChange={value => {
+            setValue('addressId', value.id);
+            setCheckedAddress(value);
+          }}
+          error={!!errors['addressId']}
+          value={checkedAddress}
+        />
         <LoadingButton
           color="primary"
           variant="contained"
           type="submit"
           size="large"
           sx={{ alignSelf: 'flex-end' }}
+          isLoading={submitIsPending}
         >
           تایید و ادامه
         </LoadingButton>

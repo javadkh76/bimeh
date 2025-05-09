@@ -28,6 +28,14 @@ const theme = createTheme(
         main: '#ACACAC',
         dark: '#ACACAC',
       },
+      error: {
+        light: '#E61F10',
+        main: '#E61F10',
+        dark: '#E61F10',
+      },
+      text: {
+        secondary: '#757575',
+      },
     },
     components: {
       MuiFormHelperText: {

@@ -12,13 +12,15 @@ type LoadingButtonProps = ButtonProps & {
 };
 
 const LoadingButton = (props: LoadingButtonProps) => {
+  const { color, size, variant, type, sx } = props;
   const isLoading = props.isLoading || false;
   return (
     <Button
-      {...props}
-      sx={{ ...props.sx, ...(isLoading ? { color: '#525252' } : {}) }}
-      color={isLoading ? 'secondary' : props.color}
-      variant="contained"
+      size={size}
+      variant={variant}
+      type={type}
+      sx={{ ...sx, ...(isLoading ? { color: '#525252' } : {}) }}
+      color={isLoading ? 'secondary' : color}
     >
       {isLoading && (
         <SvgIcon sx={{ mr: 1.25, animation: `${circular} 1s infinite linear` }}>
