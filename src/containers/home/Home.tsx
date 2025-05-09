@@ -1,11 +1,11 @@
 import Container from '@mui/material/Container';
-import CarInfo from './car-info/CarInfo';
+import CarInfoSection from '@/containers/home/car-info-section/CarInfoSection';
 import CarOwnerInfo from './car-owner-info/CarOwnerInfo';
 
 const Home = () => {
   return (
     <Container disableGutters>
-      <CarInfo />
+      <CarInfoSection />
       <CarOwnerInfo />
     </Container>
   );
