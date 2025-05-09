@@ -67,6 +67,21 @@ const theme = createTheme(
           },
         },
       },
+      MuiDialog: {
+        styleOverrides: {
+          container: {
+            alignItems: 'flex-end',
+            '& .MuiPaper-root': {
+              width: '100%',
+              margin: 0,
+              borderRadius: 0,
+            },
+          },
+          root: {
+            alignItems: 'flex-end',
+          },
+        },
+      },
     },
   },
   faIR
