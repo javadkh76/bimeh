@@ -7,6 +7,7 @@ import Modal from '@/components/modal/Modal';
 import { useState } from 'react';
 import AddressItem from '@/containers/home/car-owner-info/AddressItem';
 import { Address } from '@/types/address';
+import LoadingButton from '@/components/loading-button/LoadingButton';
 
 const CarOwnerInfo = () => {
   const [open, setOpen] = useState(false);
@@ -78,16 +79,15 @@ const CarOwnerInfo = () => {
             </Stack>
           </Modal>
         </Stack>
-        <Button
-          color="secondary"
+        <LoadingButton
+          color="primary"
           variant="contained"
           type="submit"
           size="large"
           sx={{ alignSelf: 'flex-end' }}
-          disabled
         >
           تایید و ادامه
-        </Button>
+        </LoadingButton>
       </Stack>
     </Stack>
   );
