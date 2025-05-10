@@ -43,7 +43,7 @@ const CarOwnerInfo = () => {
       onSuccess(data) {
         if (data) {
           setFormData({ ...getValues(), address: checkedAddress });
-          router.replace('/receipt');
+          router.push('/receipt');
         }
       },
       onError: async (data: AxiosError<SubmitOrder400>) => {
@@ -68,6 +68,11 @@ const CarOwnerInfo = () => {
       : mutate({
           data,
         });
+
+  const handleClose = () => {
+    window.history.back();
+    setOpen(false);
+  };
 
   useEffect(() => {
     const handlePopState = () => {
@@ -147,10 +152,7 @@ const CarOwnerInfo = () => {
       </Stack>
       <Modal
         open={open}
-        onClose={() => {
-          setOpen(false);
-        }}
-        title="حذف آدرس"
+        onClose={handleClose}
         actionBox={
           <Box sx={{ display: 'flex', width: 1 }} gap={1.25}>
             <LoadingButton
@@ -173,10 +175,7 @@ const CarOwnerInfo = () => {
               variant="outlined"
               size="large"
               sx={{ flex: 1 }}
-              onClick={() => {
-                window.history.back();
-                setOpen(false);
-              }}
+              onClick={handleClose}
               disabled={isPending}
             >
               بازگشت
