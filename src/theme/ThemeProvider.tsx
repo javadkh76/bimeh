@@ -68,6 +68,9 @@ const theme = createTheme(
       },
       MuiButton: {
         styleOverrides: {
+          outlined: {
+            borderColor: '#000000',
+          },
           root: {
             borderRadius: 0,
             padding: '11px 26px',
