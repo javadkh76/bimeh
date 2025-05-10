@@ -70,6 +70,10 @@ const theme = createTheme(
         styleOverrides: {
           outlined: {
             borderColor: '#000000',
+            '&.Mui-disabled': {
+              color: 'rgba(0, 0, 0, 0.26)',
+              backgroundColor: 'rgba(0, 0, 0, 0.12)',
+            },
           },
           root: {
             borderRadius: 0,

@@ -12,10 +12,11 @@ type LoadingButtonProps = ButtonProps & {
 };
 
 const LoadingButton = (props: LoadingButtonProps) => {
-  const { color, size, variant, type, sx } = props;
+  const { color, size, variant, type, sx, onClick } = props;
   const isLoading = props.isLoading || false;
   return (
     <Button
+      onClick={onClick}
       size={size}
       variant={variant}
       type={type}
